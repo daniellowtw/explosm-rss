@@ -6,21 +6,21 @@ Add <https://explosm-1311.appspot.com> to your rss news feed now!
 
 ## Installation
 
-go get github.com/daniellowtw/explosm-rss
+`go get github.com/daniellowtw/explosm-rss`
 
 ## Usage
 
 ```
 go install
-./explosm-rss serve
+./explosm-rss
 ```
 
 Go to `http://localhost:20480`
 
 ### Configuration
 
-* port - the port that the server is listening on
-* refresh_interval - how often to poll the actual feed from `explosm.net`
+* `port` - the port that the server is listening on
+* `refresh_interval` - how often to poll the actual feed from `explosm.net`
 
 ## License
 
