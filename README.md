@@ -8,6 +8,17 @@ Add <https://explosm-1311.appspot.com> to your rss news feed now!
 
 `go get github.com/daniellowtw/explosm-rss`
 
+### On appengine
+
+This software is compatible with [`AppEngine`](https://cloud.google.com/appengine/docs/go/quickstart).
+
+To use with `AppEngine`:
+
+* Make a directory with necessary `app.yaml` file
+* Clone this repo inside that directory
+* Download the [Go SDK](https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Go) and run `goapp serve` to make sure it is working
+* Upload it with `appcfg.py`
+
 ## Usage
 
 ```
