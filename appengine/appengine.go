@@ -23,4 +23,8 @@ func init() {
 		w.Header().Add("content-type", "text/xml")
 		w.Write([]byte(e.Generate()))
 	})
+	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("content-type", "image/png")
+		w.Write(explosm.Icon96)
+	})
 }
