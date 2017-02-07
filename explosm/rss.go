@@ -27,6 +27,12 @@ type channel struct {
 	Link        string `xml:"link"`
 	Description string `xml:"description"`
 	Item        []Item `xml:"item"`
+	Image       Image  `xml:"image"`
+}
+type Image struct {
+	URL   string `xml:"url"`
+	Title string `xml:"title"`
+	Link  string `xml:"link"`
 }
 
 func intermediate(v interface{}) string {

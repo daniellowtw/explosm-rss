@@ -79,6 +79,11 @@ func (e *Explosm) Do(r *http.Request) error {
 		Description: feed.Description,
 		Link:        feed.Link,
 		Item:        is,
+		Image: Image{
+			URL:   "//files.explosm.net/img/favicons/site/favicon-96x96.png",
+			Link:  feed.Link,
+			Title: feed.Title,
+		},
 	}
 	return nil
 }
