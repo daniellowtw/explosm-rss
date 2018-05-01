@@ -23,7 +23,8 @@ To use with `AppEngine`:
 ## Usage
 
 ```
-go install
+go get .
+go build
 ./explosm-rss
 ```
 

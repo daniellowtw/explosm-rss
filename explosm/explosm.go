@@ -17,7 +17,8 @@ const (
 )
 
 var (
-	imgRegexp = regexp.MustCompile(`(?s)<div id="comic-container">\s*?<div class="row">\s*?<div class="small-12 medium-12 large-12 columns">(.*?)<\/div>`)
+	// Compare the test and source on the website to see if this regex is still valid
+	imgRegexp = regexp.MustCompile(`(?s)<div id="comic-wrap">(.*?)</div>`)
 )
 
 type Explosm struct {
