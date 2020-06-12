@@ -5,11 +5,9 @@ import (
 	"net/http"
 	"regexp"
 	"time"
+	"log"
 
 	"github.com/mmcdole/gofeed"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/urlfetch"
-	"google.golang.org/appengine/log"
 )
 
 const (
@@ -30,22 +28,23 @@ type Explosm struct {
 
 func (e *Explosm) Run(abort chan struct{}) {
 	// Execute it the first time
-	e.Do(nil)
+	if err := e.Do(); err != nil {
+		log.Printf("could not run: %s", err)
+	}
 	for {
 		select {
 		case <-abort:
 			return
 		case <-time.After(e.RefreshInterval):
-			e.Do(nil)
+			if err := e.Do(); err != nil {
+				log.Printf("could not run: %s", err)
+			}
 		}
 	}
 }
 
-func (e *Explosm) Do(r *http.Request) error {
+func (e *Explosm) Do() error {
 	fp := gofeed.NewParser()
-	if r != nil {
-		fp.Client = urlfetch.Client(appengine.NewContext(r))
-	}
 	feed, err := fp.ParseURL(explosmFeedURL)
 	if err != nil {
 		return err
@@ -53,12 +52,15 @@ func (e *Explosm) Do(r *http.Request) error {
 	var is []Item
 	for _, i := range feed.Items {
 		e := Explosm{}
-		if err := e.GetData(i.Link, r); err != nil {
-			safeLog(r, "%s", err)
+		if err := e.GetData(i.Link); err != nil {
+			// Tolerate bad entries and just log them
+			log.Printf("could not get data from link: %s\n", err)
+			continue
 		}
 		imgEle := FindComicURL(e.data)
 		if imgEle == "" {
-			safeLog(r, "cannot find image. Data is: %s", e.data)
+			// Tolerate bad entries and just log them
+			log.Printf("could not find image link from feed item\n")
 		}
 		is = append(is, Item{
 			Title:       i.Title,
@@ -83,8 +85,8 @@ func (e *Explosm) Do(r *http.Request) error {
 	return nil
 }
 
-func (e *Explosm) GetData(url string, r *http.Request) error {
-	d, err := e.getDataFromNet(url, r)
+func (e *Explosm) GetData(url string) error {
+	d, err := e.getDataFromNet(url)
 	if err != nil {
 		return err
 	}
@@ -100,12 +102,8 @@ func FindComicURL(data []byte) string {
 	return ""
 }
 
-func (e *Explosm) getDataFromNet(url string, r *http.Request) ([]byte, error) {
-	httpClient := http.DefaultClient
-	if r != nil {
-		httpClient = urlfetch.Client(appengine.NewContext(r))
-	}
-	res, err := httpClient.Get(url)
+func (e *Explosm) getDataFromNet(url string) ([]byte, error) {
+	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
@@ -121,12 +119,4 @@ func (e *Explosm) Generate() string {
 		return "Please try again. There was an error retrieving the feeds: no feeds."
 	}
 	return generate(e.rssData)
-}
-
-// safeLog only logs if request is not nil
-func safeLog(r *http.Request, format string, args ...interface{}) {
-	if r == nil {
-		return
-	}
-	log.Errorf(appengine.NewContext(r), format, args)
 }

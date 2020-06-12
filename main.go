@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	var port = flag.Int64("port", 20480, "port to run the server on")
+	var port = flag.Int64("port", 8080, "port to run the server on")
 	var refreshInterval = flag.Duration("refresh_interval", time.Hour*1, "interval to check for new data")
 	flag.Parse()
 	e := explosm.Explosm{

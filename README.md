@@ -14,21 +14,17 @@ This software is compatible with [`AppEngine`](https://cloud.google.com/appengin
 
 To use with `AppEngine`:
 
-* Make a directory with necessary `app.yaml` file (or use the one provided)
-* Clone this repo inside that directory
-* Download the [Go SDK](https://cloud.google.com/appengine/downloads#Google_App_Engine_SDK_for_Go) and run `goapp serve` to make sure it is working
-* Upload it with `appcfg.py`
-** `python appcfg.py update "<path-to-appengine-folder>" -A explosm-1311 -V <version-number>``
+* Clone this repo.
+* Follow the instructions on the [quickstart page](https://cloud.google.com/appengine/docs/standard/go/quickstart) and download the gcloud SDK.
+* Deploy a version with `gcloud app deploy --no-promote` and check that the new version works. Migrate traffic to new version.
 
 ## Usage
 
 ```
-go get .
-go build
-./explosm-rss
+go run main.go
 ```
 
-Go to `http://localhost:20480`
+Go to `http://localhost:8080`
 
 ### Configuration
 
