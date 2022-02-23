@@ -1,6 +1,7 @@
 package explosm
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,7 +17,7 @@ const (
 
 var (
 	// Compare the test and source on the website to see if this regex is still valid
-	imgRegexp = regexp.MustCompile(`(?s)<div id="comic".*?>.*?(<img src.*?>).*?</div>`)
+	imgRegexp = regexp.MustCompile(`(?s)<div id="comic".*?>.*?<img src="(.*?)".*?>`)
 )
 
 type Explosm struct {
@@ -57,10 +58,12 @@ func (e *Explosm) Do() error {
 			log.Printf("could not get data from link: %s\n", err)
 			continue
 		}
-		imgEle := FindComicURL(e.data)
-		if imgEle == "" {
+		imgSrc := FindComicURL(e.data)
+		imgEle := fmt.Sprintf(`<img src="%s">`, imgSrc)
+		if imgSrc == "" {
 			// Tolerate bad entries and just log them
 			log.Printf("could not find image link from feed item\n")
+			imgEle = ""
 		}
 		is = append(is, Item{
 			Title:       i.Title,
