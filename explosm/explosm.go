@@ -2,21 +2,21 @@ package explosm
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 	"regexp"
 	"time"
-	"log"
 
 	"github.com/mmcdole/gofeed"
 )
 
 const (
-	explosmFeedURL = "http://feeds.feedburner.com/Explosm"
+	explosmFeedURL = "https://explosm.net/rss.xml"
 )
 
 var (
 	// Compare the test and source on the website to see if this regex is still valid
-	imgRegexp = regexp.MustCompile(`(?s)<div id="comic-wrap">(.*?)</div>`)
+	imgRegexp = regexp.MustCompile(`(?s)<div id="comic".*?>.*?(<img src.*?>).*?</div>`)
 )
 
 type Explosm struct {
